@@ -1,3 +1,4 @@
+<?php include_once 'resource/session.php' ?>
 <!DOCTYPE html>
 <html>
 
@@ -10,10 +11,11 @@
     <h2>User Authentication System </h2>
     <hr>
 
-    <p>You are currently not signed in Kindly <a href="login.php">Login</a>
-        Not yet a Member? <a href="signup.php">Signup</a></p>
-
-    <p>You are logged in as {username} <a href="logout.php">Logout</a></p>
+    <?php if (!isset($_SESSION['username'])) : ?>
+        <P>You are currently not Signed In Ogbeni <a href="login.php">Login</a> Not yet a member? <a href="signup.php">Signup</a> </P>
+    <?php else : ?>
+        <p>You are logged in as <?php if (isset($_SESSION['username'])) echo $_SESSION['username']; ?> <a href="logout.php">Logout</a> </p>
+    <?php endif ?>
 </body>
 
 </html>

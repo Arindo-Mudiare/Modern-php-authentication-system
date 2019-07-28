@@ -9,7 +9,9 @@ try {
 
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Connected to the register database";
+    // display success message
+    // echo "Connected to the register database";
 } catch (PDOException $exn) {
+    // display error message
     echo "Connection failed" . " because " . $exn->getMessage();
 }
