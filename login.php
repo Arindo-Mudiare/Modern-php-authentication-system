@@ -1,83 +1,47 @@
 <?php
-include_once 'resource/session.php';
-include_once 'resource/Database.php';
-include_once 'resource/utilities.php';
 
-if (isset($_POST['loginBtn'])) {
-    //array to hold errors
-    $form_errors = array();
+$page_title = "User Authentication - Login Page";
+include_once "partials/header.php";
+include_once "partials/_login.php";
 
-    //validate
-    $required_fields = array('username', 'password');
-    $form_errors = array_merge($form_errors, check_empty_fields($required_fields));
-
-    if (empty($form_errors)) {
-
-        //collect form data
-        $user = $_POST['username'];
-        $password = $_POST['password'];
-
-        //check if user exists in the database
-        $sqlQuery = "SELECT * FROM users WHERE username = :username";
-        $statement = $db->prepare($sqlQuery);
-        $statement->execute(array(':username' => $user));
-
-        while ($row = $statement->fetch()) {
-            $id = $row['id'];
-            $hashed_password = $row['password'];
-            $username = $row['username'];
-
-            if (password_verify($password, $hashed_password)) {
-                $_SESSION['id'] = $id;
-                $_SESSION['username'] = $username;
-                header("location: index.php");
-            } else {
-                $result = "<p style='padding: 20px; color: red; border: 1px solid gray;'> Invalid username or password</p>";
-            }
-        }
-    } else {
-        if (count($form_errors) == 1) {
-            $result = "<p style='color: red;'>Oops!! There was one error in the form </p>";
-        } else {
-            $result = "<p style='color: red;'>Oops!! There were " . count($form_errors) . " errors in the form </p>";
-        }
-    }
-}
 ?>
+<!-- contact form -->
+<section class="contact p-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5 pb-4">
+                <h3 class="display-4 mb-5 text-white">Login Page</h3>
+                <div>
+                    <?php if (isset($result)) echo $result; ?>
+                    <?php if (!empty($form_errors)) echo show_errors($form_errors); ?>
+                </div>
 
-<!DOCTYPE html>
-<html>
+                <div class="clearfix"></div>
+                <form class="contact-form" method="post" action="">
+                    <div class="form-group py-4">
+                        <input type="text" class="form-control my-2 p-2 input" placeholder="UserName" value="" name="username" id="usernameField" />
+                        <label for="usernnameField" class="label">UserName</label>
+                    </div>
+                    <div class="form-group py-4">
+                        <input type="password" class="form-control my-2 p-2 input" placeholder="Password" value="" name="password" id="passwordField" />
+                        <label for="email" class="label">Password</label>
+                    </div>
+                    <div class="form-group py-4 my-4">
+                        <input type="checkbox" checked />
+                        <label for="check" name="remember" class="text-white">Remember Me</label>
+                    </div>
+                    <a href="forgot_password.php" class="text-white">Forgot Password?</a>
+                    <button type="submit" name="loginBtn" class="btn btn-block mt-4 p-2 font-weight-bold text-uppercase submit-button">
+                        Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end of contact form -->
 
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Login Page</title>
-</head>
-
-<body>
-    <h2>User Authentication System </h2>
-    <hr>
-
-    <h3>Login Form</h3>
-
-    <?php if (isset($result)) echo $result; ?>
-    <?php if (!empty($form_errors)) echo show_errors($form_errors); ?>
-    <form method="post" action="">
-        <table>
-            <tr>
-                <td>Username:</td>
-                <td><input type="text" value="" name="username"></td>
-            </tr>
-            <tr>
-                <td>Password:</td>
-                <td><input type="password" value="" name="password"></td>
-            </tr>
-            <tr>
-                <td><a href="forgot_password.php">Forgot Password?</a></td>
-                <td><input style="float: right;" type="submit" name="loginBtn" value="Signin"></td>
-            </tr>
-        </table>
-    </form>
-    <p><a href="index.php">Back</a> </p>
+<?php include_once "partials/footer.php"; ?>
 </body>
 
 </html>
